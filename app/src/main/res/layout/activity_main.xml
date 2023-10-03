@@ -11,29 +11,28 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:elevation="3dp"
         android:text="Photo Secure"
         android:textColor="#fff"
         android:textSize="26sp"
         android:textStyle="bold"
-        android:elevation="3dp"
-        android:layout_marginTop="30dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
-
     <RelativeLayout
+        android:id="@+id/r1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/r1"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/search_bg"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView1"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView1">
 
 
         <ImageView
@@ -42,8 +41,8 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            app:tint="#000000"
-            android:src="@drawable/edit"></ImageView>
+            android:src="@drawable/edit"
+            app:tint="#000000"></ImageView>
 
         <TextView
             android:layout_width="wrap_content"
@@ -55,26 +54,50 @@
             android:textSize="12sp"></TextView>
 
 
-
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout"
         android:layout_marginTop="30dp"
-        android:paddingTop="30dp"
         android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/r1"
-        android:orientation="horizontal">
+        app:layout_constraintTop_toBottomOf="@id/r1">
 
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="60dp"
+            android:elevation="5dp"
+            android:src="@drawable/log"></ImageView>
 
+        <ImageView
+            android:id="@+id/img_encrypt"
+            android:layout_width="230dp"
+            android:layout_height="210dp"
+            android:elevation="5dp"
+            android:src="@drawable/pic3"></ImageView>
 
 
     </LinearLayout>
 
+
+    <ImageView
+        android:id="@+id/logo_img"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="60dp"
+        android:elevation="5dp"
+        android:src="@drawable/log"
+        app:layout_constraintBaseline_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout"></ImageView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
