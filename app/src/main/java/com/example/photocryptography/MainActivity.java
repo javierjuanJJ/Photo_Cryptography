@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
 
     private ImageView imageEncrypt;
@@ -15,7 +17,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         imageEncrypt = findViewById(R.id.img_encrypt);
         imageEncrypt.setOnClickListener(new View.OnClickListener() {
             @Override

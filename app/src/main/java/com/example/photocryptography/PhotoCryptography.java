@@ -11,7 +11,9 @@ import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,15 +36,19 @@ public class PhotoCryptography extends AppCompatActivity {
     ClipboardManager clipboardManager;
     ImageView imgView;
     EditText encImg;
+    private Bundle state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        state = savedInstanceState;
         setContentView(R.layout.activity_photo_cryptography);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setTitle("Crypt Image");
-        actionBar.show();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle("Crypt Image");
+            actionBar.show();
+        }
 
         encrypt = findViewById(R.id.enc_btn);
         decrypt = findViewById(R.id.dec_btn);
@@ -128,10 +134,17 @@ public class PhotoCryptography extends AppCompatActivity {
 
     public void copyCode(View view) {
         String codes = encImg.getText().toString().trim();
+        Log.i("result", codes);
         if(!codes.isEmpty()){
-            ClipData temp = ClipData.newPlainText("text", codes);
+            ClipData temp = ClipData.newPlainText("simple text", codes);
             clipboardManager.setPrimaryClip(temp);
             Toast.makeText(this, "Text copied to clipboard", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.clear();
     }
 }
