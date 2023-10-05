@@ -73,6 +73,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="#ffffff"
+                android:text="1"
+                android:clickable="true"
+                android:longClickable="true"
+                android:textIsSelectable="true"
+                android:enabled="true"
                 android:hint="Enter your text here"
                 android:padding="10dp"
                 android:textColor="#000000"
@@ -83,16 +88,17 @@
     </ScrollView>
 
     <ProgressBar
+        android:id="@+id/copy_pb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/copy_pb"
-        android:gravity="center"
         android:layout_marginHorizontal="38dp"
         android:layout_marginBottom="8dp"
         android:backgroundTint="#000000"
+        android:gravity="center"
         android:text="Copy Code"
         android:textColor="#ffffff"
         android:textSize="13sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@id/imgView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"></ProgressBar>

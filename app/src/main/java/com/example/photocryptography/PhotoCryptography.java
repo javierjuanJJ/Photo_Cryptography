@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,9 +50,9 @@ public class PhotoCryptography extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        state = savedInstanceState;
         setContentView(R.layout.activity_photo_cryptography);
         ActionBar actionBar = getSupportActionBar();
+
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setTitle("Crypt Image");
@@ -62,14 +63,12 @@ public class PhotoCryptography extends AppCompatActivity {
         decrypt = findViewById(R.id.dec_btn);
         encImg = findViewById(R.id.enc_txt);
 
-        encImg.setEnabled(false);
+        // encImg.setEnabled(false);
         imgView = findViewById(R.id.imgView);
 
         copy_pb = findViewById(R.id.copy_pb);
 
         clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-
-
         encrypt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,15 +88,15 @@ public class PhotoCryptography extends AppCompatActivity {
                     cancelAsyncTask(decodeAsyncTask);
                     decodeAsyncTask = new DecodeAsyncTask(getApplicationContext(), imgView, copy_pb);
                     decodeAsyncTask.execute(encImg.getText().toString().trim());
-                    /*byte[] bytes = Base64.decode(encImg.getText().toString(), Base64.DEFAULT);
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    imgView.setImageBitmap(bitmap);*/
+                    decrypt.setEnabled(false);
                 }
             }
         });
 
-    }
 
+
+
+    }
     private void selectPhoto() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -126,42 +125,25 @@ public class PhotoCryptography extends AppCompatActivity {
             cancelAsyncTask(encodeAsyncTask);
             encodeAsyncTask = new EncodeAsyncTask(getApplicationContext(), encImg, copy_pb);
             encodeAsyncTask.execute(uri);
-
-            /*Bitmap bitmap;
-            ImageDecoder.Source source = null;
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                source = ImageDecoder.createSource(getContentResolver(), uri);
-
-                try {
-                    bitmap = ImageDecoder.decodeBitmap(source);
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    byte[] bytes = stream.toByteArray();
-                    image = Base64.encodeToString(bytes, Base64.DEFAULT);
-                    encImg.setText(image);
-                    Toast.makeText(this, "Image encrypted! Click on Decrypt to restore", Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {
-                    Toast.makeText(this, "The image can not be encrypted.", Toast.LENGTH_SHORT).show();
-                }
-            }*/
-
-
-
-
+            encrypt.setEnabled(false);
         }
-
-
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cancelAsyncTask(encodeAsyncTask);
+        cancelAsyncTask(decodeAsyncTask);
+    }
+
     private void cancelAsyncTask(AsyncTask encodeAsyncTask) {
-        // progressTask.setVisibility(View.INVISIBLE);
+        copy_pb.setVisibility(View.INVISIBLE);
         AsyncTask.Status status;
         if (encodeAsyncTask != null) {
             status = encodeAsyncTask.getStatus();
             Log.i("cancel", "Status: " + status);
-            if ((encodeAsyncTask != null) && ((status == AsyncTask.Status.RUNNING) || (status == AsyncTask.Status.PENDING))) {
+            if ((status == AsyncTask.Status.RUNNING) || (status == AsyncTask.Status.PENDING)) {
 
                 Log.i("cancel", "The buton has pressed while the task is running");
                 encodeAsyncTask.cancel(true);
