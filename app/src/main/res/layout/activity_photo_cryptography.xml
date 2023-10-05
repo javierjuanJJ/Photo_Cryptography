@@ -56,7 +56,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@id/copy_btn"
+        app:layout_constraintBottom_toTopOf="@id/copy_pb"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dec_btn">
@@ -82,10 +82,10 @@
         </LinearLayout>
     </ScrollView>
 
-    <Button
+    <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/copy_btn"
+        android:id="@+id/copy_pb"
         android:gravity="center"
         android:layout_marginHorizontal="38dp"
         android:layout_marginBottom="8dp"
@@ -95,7 +95,6 @@
         android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@id/imgView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:onClick="copyCode"></Button>
+        app:layout_constraintStart_toStartOf="parent"></ProgressBar>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +28,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.example.photocryptography.asyncTasks.DecodeAsyncTask;
+import com.example.photocryptography.asyncTasks.EncodeAsyncTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,6 +42,9 @@ public class PhotoCryptography extends AppCompatActivity {
     ImageView imgView;
     EditText encImg;
     private Bundle state;
+    private EncodeAsyncTask encodeAsyncTask;
+    private DecodeAsyncTask decodeAsyncTask;
+    private ProgressBar copy_pb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +64,9 @@ public class PhotoCryptography extends AppCompatActivity {
 
         encImg.setEnabled(false);
         imgView = findViewById(R.id.imgView);
+
+        copy_pb = findViewById(R.id.copy_pb);
+
         clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
 
@@ -75,9 +86,12 @@ public class PhotoCryptography extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    byte[] bytes = Base64.decode(encImg.getText().toString(), Base64.DEFAULT);
+                    cancelAsyncTask(decodeAsyncTask);
+                    decodeAsyncTask = new DecodeAsyncTask(getApplicationContext(), imgView, copy_pb);
+                    decodeAsyncTask.execute(encImg.getText().toString().trim());
+                    /*byte[] bytes = Base64.decode(encImg.getText().toString(), Base64.DEFAULT);
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    imgView.setImageBitmap(bitmap);
+                    imgView.setImageBitmap(bitmap);*/
                 }
             }
         });
@@ -108,7 +122,12 @@ public class PhotoCryptography extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
             Uri uri = data.getData();
-            Bitmap bitmap;
+
+            cancelAsyncTask(encodeAsyncTask);
+            encodeAsyncTask = new EncodeAsyncTask(getApplicationContext(), encImg, copy_pb);
+            encodeAsyncTask.execute(uri);
+
+            /*Bitmap bitmap;
             ImageDecoder.Source source = null;
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -125,26 +144,30 @@ public class PhotoCryptography extends AppCompatActivity {
                 } catch (IOException e) {
                     Toast.makeText(this, "The image can not be encrypted.", Toast.LENGTH_SHORT).show();
                 }
+            }*/
+
+
+
+
+        }
+
+
+    }
+
+
+    private void cancelAsyncTask(AsyncTask encodeAsyncTask) {
+        // progressTask.setVisibility(View.INVISIBLE);
+        AsyncTask.Status status;
+        if (encodeAsyncTask != null) {
+            status = encodeAsyncTask.getStatus();
+            Log.i("cancel", "Status: " + status);
+            if ((encodeAsyncTask != null) && ((status == AsyncTask.Status.RUNNING) || (status == AsyncTask.Status.PENDING))) {
+
+                Log.i("cancel", "The buton has pressed while the task is running");
+                encodeAsyncTask.cancel(true);
+                Log.i("cancel", "The task have just cancelled.");
             }
+        } else Log.i("cancel", "Not started");
 
-
-        }
-
-    }
-
-    public void copyCode(View view) {
-        String codes = encImg.getText().toString().trim();
-        Log.i("result", codes);
-        if(!codes.isEmpty()){
-            ClipData temp = ClipData.newPlainText("simple text", codes);
-            clipboardManager.setPrimaryClip(temp);
-            Toast.makeText(this, "Text copied to clipboard", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        outState.clear();
     }
 }
